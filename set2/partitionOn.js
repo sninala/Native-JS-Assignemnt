@@ -1,8 +1,8 @@
 // http://www.codewars.com/kata/partition-on
 
 function partitionOn(pred, items) {
-    var responseFalse = [];
-    var responseTrue = [];
+    var responseFalse = [],
+        responseTrue = [];
     items.forEach(function(item){
         var response  = pred(item);
         if(response){
