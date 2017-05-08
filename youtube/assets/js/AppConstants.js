@@ -1,6 +1,7 @@
 var AppConstants = {
-	youtubeSearchAPIURL: "https://www.googleapis.com/youtube/v3/search",
-    apiKey: "AIzaSyAAZmiXXZeEmUNBUhIT497rQ23Uqn_fXTA",
-    type: "video",
-    part: "snippet"
+    YOUTUBE_API_SEARCH_URL: "https://www.googleapis.com/youtube/v3/search",
+    API_KEY: "AIzaSyAAZmiXXZeEmUNBUhIT497rQ23Uqn_fXTA",
+    TYPE: "video",
+    PART: "snippet"
 }
+Object.freeze(AppConstants);

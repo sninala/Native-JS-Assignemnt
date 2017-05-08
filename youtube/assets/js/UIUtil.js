@@ -26,11 +26,11 @@ UIUtil.prototype.renderSearchDivision = function () {
 }
 
 UIUtil.prototype.searchForVideos = function (searchText) {
-    var url = AppConstants.youtubeSearchAPIURL;
+    var url = AppConstants.YOUTUBE_API_SEARCH_URL;
     var queryParams = {
-        key: AppConstants.apiKey,
-        part: AppConstants.part,
-        type: AppConstants.type,
+        key: AppConstants.API_KEY,
+        part: AppConstants.PART,
+        type: AppConstants.TYPE,
         q: searchText
     }
     this.searchApi.getSearchResults(url, queryParams, function(response){
