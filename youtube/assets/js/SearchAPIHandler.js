@@ -1,23 +1,15 @@
 var SearchApiHandler = function () {};
 
-SearchApiHandler.prototype.getSearchResults = function(url, queryParams, callback) {
-    url = url + '?' + this.constructUrLFromParams(queryParams)
+SearchApiHandler.prototype.getSearchResults = function (url, queryParams) {
+    url = url + '?' + this.constructUrLFromParams(queryParams);
     console.log(url);
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            console.log(xhr.responseText);
-            callback(xhr.responseText);
-        }
-
-        if (xhr.status !== 200) {
-            console.log("Error");
-            return;
-        }
-    }
-
-    xhr.open("GET", url, true)
-    xhr.send();
+    return fetch(url).then(function (response) {
+        return response.json();
+    }).then(function (responseJson) {
+        return responseJson['items'];
+    }).catch(function (error) {
+        console.log('youtube API call Error: ' + error.message);
+    });
 }
 
 SearchApiHandler.prototype.constructUrLFromParams = function(queryParams) {

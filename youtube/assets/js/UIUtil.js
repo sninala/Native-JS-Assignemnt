@@ -33,8 +33,9 @@ UIUtil.prototype.searchForVideos = function (searchText) {
         type: AppConstants.TYPE,
         q: searchText
     }
-    this.searchApi.getSearchResults(url, queryParams, function(response){
-        console.log(response);                       
-    })
+    
+    this.searchApi.getSearchResults(url, queryParams).then(function (apiResponse) {
+        console.log(apiResponse);
+    });
     
 }
