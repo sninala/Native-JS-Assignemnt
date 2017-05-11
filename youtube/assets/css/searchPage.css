@@ -1,0 +1,23 @@
+body {
+    background-color: #343D46;
+}
+
+.search {
+    text-align: center;
+    padding: 10px;
+}
+
+#youtubesearch {
+    width: 35%;
+}
+
+.videoContainer {
+    display: inline-block;
+    width: 270px;
+    vertical-align: top;
+    background: white;
+    margin: 30px;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+}
