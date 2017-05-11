@@ -1,92 +1,33 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title> You tube search application</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        
-        <style>
 
-.stylish-input-group .input-group-addon{
-    background: white !important; 
-}
-.stylish-input-group .form-control{
-	border-right:0; 
-	box-shadow:0 0 0; 
-	border-color:#ccc;
-}
-.stylish-input-group button{
-    border:0;
-    background:transparent;
-}
-        </style>
-    </head>
-    <body>
-<!--
-    <div class="container">
-	<div class="row">
-        <div class="col-sm-10 col-sm-offset-1">
-                <div class="input-group stylish-input-group">
-                    <input type="text" class="form-control"  placeholder="Search" >
-                    <span class="input-group-addon">
-                        <button type="submit">
-                            <span class="glyphicon glyphicon-search"></span>
-                        </button>  
-                    </span>
-                </div>
+<head>
+    <title> You tube search application</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
 
+<body>
+    <template id="videoContainertpl">
+        <div class="videoContainer">
+            <div class='thumbnail'>
+                <div class="title"></div>
+                <img alt='image here' />
+            </div>
+            <div class="channel">
+                <ul class="fa-ul">
+                    <li class="channelTitle"><i class="fa-li fa fa-male"></i></li>
+                    <li class="publishedDate"><i class="fa-li fa fa-calendar"></i></li>
+                    <li class="views"><i class="fa-li fa fa-eye"></i></li>
+                </ul>
+            </div>
+            <p class="description"></p>
         </div>
-	</div>
-</div>
-        
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-sm-12 col-md-6 col-lg-3">
-    <div class="thumbnail">
-      <img src="..." alt="...">
-      <div class="caption">
-        <h3>Thumbnail label</h3>
-        <p>...</p>
-        <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
-      </div>
-    </div>
-  </div>
-        <div class="col-sm-12 col-md-6 col-lg-3">
-    <div class="thumbnail">
-      <img src="..." alt="...">
-      <div class="caption">
-        <h3>Thumbnail label</h3>
-        <p>...</p>
-        <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
-      </div>
-    </div>
-  </div>
-        <div class="col-sm-12 col-md-6 col-lg-3">
-    <div class="thumbnail">
-      <img src="..." alt="...">
-      <div class="caption">
-        <h3>Thumbnail label</h3>
-        <p>...</p>
-        <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
-      </div>
-    </div>
-  </div>
-        <div class="col-sm-12 col-md-6 col-lg-3">
-    <div class="thumbnail">
-      <img src="..." alt="...">
-      <div class="caption">
-        <h3>Thumbnail label</h3>
-        <p>...</p>
-        <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
-      </div>
-    </div>
-  </div>
-	</div>
-</div>
+    </template>
 
--->
-        <script src="assets/js/AppConstants.js" type="text/javascript"></script>
-        <script src="assets/js/SearchAPIHandler.js" type="text/javascript"></script>
-        <script src="assets/js/UIUtil.js" type="text/javascript"></script>
-        <script src="assets/js/index.js" type="text/javascript"></script>
-    </body>
+    <script src="assets/js/AppConstants.js" type="text/javascript"></script>
+    <script src="assets/js/SearchAPIHandler.js" type="text/javascript"></script>
+    <script src="assets/js/UIUtil.js" type="text/javascript"></script>
+    <script src="assets/js/index.js" type="text/javascript"></script>
+</body>
+
 </html>
