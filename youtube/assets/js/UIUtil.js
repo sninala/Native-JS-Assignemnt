@@ -32,6 +32,7 @@ UIUtil.prototype.searchForVideos = function (searchText) {
         key: AppConstants.API_KEY,
         part: AppConstants.PART,
         type: AppConstants.TYPE,
+        maxResults: AppConstants.MAX_RESULTS,
         q: searchText
     }
     this.searchApi.getSearchResults(url, queryParams).then(function (apiResponse) {
