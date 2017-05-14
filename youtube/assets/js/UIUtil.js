@@ -1,5 +1,6 @@
-var UIUtil = function (searchApi) {
+var UIUtil = function (searchApi, pagenator) {
     this.searchApi = searchApi;
+    this.pagenator = pagenator;
 };
 
 UIUtil.prototype.renderSearchDivision = function () {
@@ -19,9 +20,7 @@ UIUtil.prototype.renderSearchDivision = function () {
         }
     });
 
-
     searchDiv.appendChild(searchBox);
-
     document.body.appendChild(searchDiv);
 }
 
@@ -36,42 +35,24 @@ UIUtil.prototype.searchForVideos = function (searchText) {
         q: searchText
     }
     this.searchApi.getSearchResults(url, queryParams).then(function (apiResponse) {
-        self.renderVideos(apiResponse);
+        self.renderSearchResults(apiResponse);
     });
 
 }
 
-UIUtil.prototype.renderVideos = function (items) {
-    var videoContainertpl = document.querySelector('#videoContainertpl');
-    var allVideos = document.createElement('div');
-    var allVideosFragment = document.createDocumentFragment();
-    this.clearPreviosSearchResults();
-    allVideos.setAttribute('id', 'search-results');
-    allVideos.classList.add('search-results');
-    items.forEach(function(item, index){
-        var clone = document.importNode(videoContainertpl.content, true);
-        clone.querySelector('.videoContainer').setAttribute('id', 'video_' + index);
-        var imgEl = clone.querySelector('img');
-        imgEl.setAttribute('src', item.snippet.thumbnails.medium.url);
-        var title = clone.querySelector('.title');
-        var aTag = document.createElement('a');
-        aTag.setAttribute('href', AppConstants.YOUTUBE_WATCH_LINK + item.id.videoId);
-        aTag.setAttribute('target', '_blank');
-        aTag.appendChild(document.createTextNode(item.snippet.title));
-        title.appendChild(aTag);
-
-        var channelTitle = clone.querySelector('.channelTitle');
-        channelTitle.appendChild(document.createTextNode(item.snippet.channelTitle));
-
-        var publishedDate = clone.querySelector('.publishedDate');
-        publishedDate.appendChild(document.createTextNode(item.snippet.publishedAt));
-
-        var description = clone.querySelector('.description');
-        description.appendChild(document.createTextNode(item.snippet.description));
-        allVideosFragment.appendChild(clone);
+UIUtil.prototype.renderSearchResults = function (videos) {
+    var self = this;
+    this.renderVideos(videos);
+    self.renderPagenationFor(videos);
+    window.addEventListener("resize", function () {
+        self.renderPagenationFor(videos)
     });
-    allVideos.appendChild(allVideosFragment);
-    document.body.appendChild(allVideos);
+}
+
+UIUtil.prototype.renderPagenationFor = function (items) {
+    var numberOfpagesToDisplay = this.pagenator.getTotalNumberOfPagesFor(items);
+    this.renderPageNumbers(numberOfpagesToDisplay);
+    this.addEventListenerForPageClick();
 }
 
 UIUtil.prototype.clearPreviosSearchResults = function (items) {
@@ -79,4 +60,120 @@ UIUtil.prototype.clearPreviosSearchResults = function (items) {
     if (allVideos) {
         allVideos.parentElement.removeChild(allVideos);
     }
+}
+
+UIUtil.prototype.renderPageNumbers = function (numberOfpages) {
+    this.clearPagination();
+    var paginationElement = document.createElement('div');
+    paginationElement.setAttribute('id', 'pagination');
+
+    var paginationControlsElement = document.createElement('div');
+    paginationControlsElement.classList.add('pagination-controls')
+
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < numberOfpages; i++) {
+        var aTag = document.createElement('a');
+        aTag.appendChild(document.createTextNode(i + 1));
+        aTag.setAttribute('id', 'page' + (i + 1));
+        aTag.setAttribute('href', '#');
+        fragment.appendChild(aTag);
+    }
+    paginationControlsElement.appendChild(fragment);
+    paginationElement.appendChild(paginationControlsElement);
+    document.body.appendChild(paginationElement);
+    this.highliteCurrentPage();
+}
+
+
+UIUtil.prototype.addEventListenerForPageClick = function () {
+    var paginationControlsElement = document.querySelector('#pagination').firstElementChild;
+    var self = this;
+    paginationControlsElement.addEventListener('click', function (event) {
+        if (event.target.tagName === 'A') {
+            self.pagenator.setCurrentPage(event.target.text);
+            self.renderVideos(self.searchApi.getTotalVideos());
+            self.highliteCurrentPage();
+        }
+    });
+}
+
+
+UIUtil.prototype.clearPagination = function () {
+    var paginationElement = document.querySelector('#pagination');
+    if (paginationElement) {
+        paginationElement.parentElement.removeChild(paginationElement);
+    }
+}
+
+UIUtil.prototype.highliteCurrentPage = function () {
+    var paginationElement = document.querySelector('#pagination').firstElementChild;
+    var currentPage = this.pagenator.getCurrentPage();
+    var aTag = paginationElement.querySelector('#page' + currentPage);
+
+    if (!aTag) {
+        currentPage = 1;
+        this.pagenator.setCurrentPage(currentPage);
+        aTag = paginationElement.querySelector('#page' + currentPage);
+    }
+
+    var previousActivePage = paginationElement.querySelector('.active');
+    if (previousActivePage) {
+        previousActivePage.classList.remove('active');
+    }
+
+    aTag.classList.add('active');
+}
+
+UIUtil.prototype.renderVideos = function (videos) {
+    var allVideosElelement = document.createElement('div');
+    var allVideosFragment = document.createDocumentFragment();
+    var numberOfCards = this.pagenator.getNumberOfVideosForCurrentPage();
+    var startIndex = this.pagenator.getStartIndexForPage(numberOfCards);
+
+    this.clearPreviosSearchResults();
+
+    allVideosElelement.setAttribute('id', 'search-results');
+    allVideosElelement.classList.add('search-results');
+
+    for (var i = startIndex; i < (startIndex + numberOfCards); i++) {
+        if (videos[i]) {
+            var node = this.constructHTMLNodeFor(videos[i], i);
+            allVideosFragment.appendChild(node);
+        }
+    }
+
+    allVideosElelement.appendChild(allVideosFragment);
+    document.body.appendChild(allVideosElelement);
+
+    var numberOfpages = this.pagenator.getTotalNumberOfPagesFor(videos);
+    this.renderPageNumbers(numberOfpages);
+    this.addEventListenerForPageClick();
+}
+
+
+UIUtil.prototype.constructHTMLNodeFor = function (card, index) {
+    var t = document.querySelector('#videoContainertpl');
+    var clone = document.importNode(t.content, true);
+    clone.querySelector('.videoContainer').setAttribute('id', 'video_' + index);
+
+    var imgElement = clone.querySelector('img');
+    imgElement.setAttribute('src', card.snippet.thumbnails.medium.url);
+
+    var title = clone.querySelector('.title');
+    var aTag = document.createElement('a');
+    aTag.setAttribute('href', AppConstants.YOUTUBE_WATCH_LINK + card.id.videoId);
+    aTag.setAttribute('target', '_blank');
+    aTag.appendChild(document.createTextNode(card.snippet.title));
+    title.appendChild(aTag);
+
+    var channelTitle = clone.querySelector('.channelTitle');
+    channelTitle.appendChild(document.createTextNode(card.snippet.channelTitle));
+
+    var publishedDate = clone.querySelector('.publishedDate');
+    publishedDate.appendChild(document.createTextNode(card.snippet.publishedAt));
+
+    var description = clone.querySelector('.description');
+    description.appendChild(document.createTextNode(card.snippet.description));
+
+    return clone;
 }

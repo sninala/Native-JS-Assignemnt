@@ -21,3 +21,21 @@ body {
     text-align: center;
     border-radius: 5px;
 }
+
+.pagination-controls a {
+    color: white;
+    float: left;
+    padding: 8px 16px;
+    border-radius: 5px;
+}
+
+.pagination-controls a.active {
+    background-color: red;
+    color: white;
+}
+
+.pagination-controls a:hover:not(.active) {
+    background-color: #ddd;
+    border-radius: 5px;
+}
+

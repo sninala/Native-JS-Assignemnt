@@ -4,6 +4,8 @@ var AppConstants = {
     TYPE: "video",
     PART: "snippet",
     MAX_RESULTS: 25,
-    YOUTUBE_WATCH_LINK: "https://www.youtube.com/watch?v="
+    YOUTUBE_WATCH_LINK: "https://www.youtube.com/watch?v=",
+    MIN_VIDEOS_PER_PAGE: 1,
+    VIDEO_WIDTH: 330
 }
 Object.freeze(AppConstants);
