@@ -70,15 +70,15 @@ UIUtil.prototype.renderPageNumbers = function (numberOfpages) {
     var paginationControlsElement = document.createElement('div');
     paginationControlsElement.classList.add('pagination-controls')
 
-    var fragment = document.createDocumentFragment();
+    var paginationFragment = document.createDocumentFragment();
     for (var i = 0; i < numberOfpages; i++) {
         var aTag = document.createElement('a');
         aTag.appendChild(document.createTextNode(i + 1));
         aTag.setAttribute('id', 'page' + (i + 1));
         aTag.setAttribute('href', '#');
-        fragment.appendChild(aTag);
+        paginationFragment.appendChild(aTag);
     }
-    paginationControlsElement.appendChild(fragment);
+    paginationControlsElement.appendChild(paginationFragment);
     paginationElement.appendChild(paginationControlsElement);
     document.body.appendChild(paginationElement);
     this.highliteCurrentPage();
@@ -152,8 +152,8 @@ UIUtil.prototype.renderVideos = function (videos) {
 
 
 UIUtil.prototype.constructHTMLNodeFor = function (card, index) {
-    var t = document.querySelector('#videoContainertpl');
-    var clone = document.importNode(t.content, true);
+    var videoContainerTemplate = document.querySelector('#videoContainertpl');
+    var clone = document.importNode(videoContainerTemplate.content, true);
     clone.querySelector('.videoContainer').setAttribute('id', 'video_' + index);
 
     var imgElement = clone.querySelector('img');
