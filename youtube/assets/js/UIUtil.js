@@ -1,10 +1,11 @@
+"use strict";
 var UIUtil = function (searchApi, pagenator) {
     this.searchApi = searchApi;
     this.pagenator = pagenator;
 };
 
 UIUtil.prototype.renderSearchDivision = function () {
-    var searchDivision, searchBox, self = this;
+    var searchDivision, searchBox, searchDiv, self = this;
 
     searchDiv = document.createElement('div');
     searchDiv.classList.add('search');

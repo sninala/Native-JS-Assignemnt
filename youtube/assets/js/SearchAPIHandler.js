@@ -1,3 +1,4 @@
+"use strict";
 var SearchApiHandler = function () {};
 
 SearchApiHandler.prototype.getSearchResults = function (url, queryParams) {

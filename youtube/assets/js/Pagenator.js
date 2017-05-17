@@ -1,3 +1,4 @@
+"use strict";
 var Pagenator = function () {};
 
 Pagenator.prototype.getTotalNumberOfPagesFor = function (items) {
