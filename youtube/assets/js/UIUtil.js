@@ -1,9 +1,7 @@
 var UIUtil = (function () {
     "use strict";
 
-    function UIUtil(searchApi, paginator) {
-        this.searchApi = searchApi;
-        this.paginator = paginator;
+    function UIUtil() {
     };
 
     UIUtil.prototype.renderSearchDivision = function () {
@@ -19,28 +17,15 @@ var UIUtil = (function () {
         searchBox.addEventListener("keyup", function (event) {
             event.preventDefault();
             if (event.keyCode == 13) {
-                self.searchForVideos(searchBox.value);
+                var searchText = searchBox.value;
+                searchApi.searchForVideos(searchText).then(function (apiResponse) {
+                    self.renderSearchResults(apiResponse);
+                });
             }
         });
 
         searchDiv.appendChild(searchBox);
         document.body.appendChild(searchDiv);
-    }
-
-    UIUtil.prototype.searchForVideos = function (searchText) {
-        var url = AppConstants.YOUTUBE_API_SEARCH_URL,
-            self = this;
-        var queryParams = {
-            key: AppConstants.API_KEY,
-            part: AppConstants.PART,
-            type: AppConstants.TYPE,
-            maxResults: AppConstants.MAX_RESULTS,
-            q: searchText
-        }
-        this.searchApi.getSearchResults(url, queryParams).then(function (apiResponse) {
-            self.renderSearchResults(apiResponse);
-        });
-
     }
 
     UIUtil.prototype.renderSearchResults = function (videos) {
@@ -53,7 +38,7 @@ var UIUtil = (function () {
     }
 
     UIUtil.prototype.renderPagenationFor = function (items) {
-        var numberOfpagesToDisplay = this.paginator.getTotalNumberOfPagesFor(items);
+        var numberOfpagesToDisplay = paginator.getTotalNumberOfPagesFor(items);
         this.renderPageNumbers(numberOfpagesToDisplay);
         this.addEventListenerForPageClick();
     }
@@ -93,8 +78,8 @@ var UIUtil = (function () {
         var self = this;
         paginationControlsElement.addEventListener('click', function (event) {
             if (event.target.tagName === 'A') {
-                self.paginator.setCurrentPage(event.target.text);
-                self.renderVideos(self.searchApi.getTotalVideos());
+                paginator.setCurrentPage(event.target.text);
+                self.renderVideos(searchApi.getTotalVideos());
                 self.highliteCurrentPage();
             }
         });
@@ -110,12 +95,12 @@ var UIUtil = (function () {
 
     UIUtil.prototype.highliteCurrentPage = function () {
         var paginationElement = document.querySelector('#pagination').firstElementChild;
-        var currentPage = this.paginator.getCurrentPage();
+        var currentPage = paginator.getCurrentPage();
         var aTag = paginationElement.querySelector('#page' + currentPage);
 
         if (!aTag) {
             currentPage = 1;
-            this.paginator.setCurrentPage(currentPage);
+            paginator.setCurrentPage(currentPage);
             aTag = paginationElement.querySelector('#page' + currentPage);
         }
 
@@ -130,8 +115,8 @@ var UIUtil = (function () {
     UIUtil.prototype.renderVideos = function (videos) {
         var allVideosElelement = document.createElement('div');
         var allVideosFragment = document.createDocumentFragment();
-        var numberOfCards = this.paginator.getNumberOfVideosForCurrentPage();
-        var startIndex = this.paginator.getStartIndexForPage(numberOfCards);
+        var numberOfCards = paginator.getNumberOfVideosForCurrentPage();
+        var startIndex = paginator.getStartIndexForPage(numberOfCards);
 
         this.clearPreviosSearchResults();
 
@@ -148,16 +133,16 @@ var UIUtil = (function () {
         allVideosElelement.appendChild(allVideosFragment);
         document.body.appendChild(allVideosElelement);
 
-        var numberOfpages = this.paginator.getTotalNumberOfPagesFor(videos);
+        var numberOfpages = paginator.getTotalNumberOfPagesFor(videos);
         this.renderPageNumbers(numberOfpages);
         this.addEventListenerForPageClick();
     }
 
 
     UIUtil.prototype.constructHTMLNodeFor = function (card, index) {
-        var videoContainerTemplate = document.querySelector('#videoContainertpl');
+        var videoContainerTemplate = document.querySelector('#video-container-tpl');
         var clone = document.importNode(videoContainerTemplate.content, true);
-        clone.querySelector('.videoContainer').setAttribute('id', 'video_' + index);
+        clone.querySelector('.video-container').setAttribute('id', 'video_' + index);
 
         var imgElement = clone.querySelector('img');
         imgElement.setAttribute('src', card.snippet.thumbnails.medium.url);
@@ -169,10 +154,10 @@ var UIUtil = (function () {
         aTag.appendChild(document.createTextNode(card.snippet.title));
         title.appendChild(aTag);
 
-        var channelTitle = clone.querySelector('.channelTitle');
+        var channelTitle = clone.querySelector('.channel-title');
         channelTitle.appendChild(document.createTextNode(card.snippet.channelTitle));
 
-        var publishedDate = clone.querySelector('.publishedDate');
+        var publishedDate = clone.querySelector('.published-date');
         publishedDate.appendChild(document.createTextNode(card.snippet.publishedAt));
 
         var description = clone.querySelector('.description');

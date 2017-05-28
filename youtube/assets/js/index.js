@@ -1,6 +1,6 @@
 (function () {
     searchApi = new SearchApiHandler();
-    pagenator = new Paginator();
-    uiUtil = new UIUtil(searchApi, pagenator);
+    paginator = new Paginator();
+    uiUtil = new UIUtil();
     uiUtil.renderSearchDivision();
 })();

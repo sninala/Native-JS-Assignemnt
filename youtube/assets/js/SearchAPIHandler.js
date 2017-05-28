@@ -3,8 +3,16 @@ var SearchApiHandler = (function () {
 
     function SearchApiHandler() {};
 
-    SearchApiHandler.prototype.getSearchResults = function (url, queryParams) {
-        var self = this;
+    SearchApiHandler.prototype.searchForVideos = function (searchText) {
+        var url = AppConstants.YOUTUBE_API_SEARCH_URL,
+            self = this;
+        var queryParams = {
+            key: AppConstants.API_KEY,
+            part: AppConstants.PART,
+            type: AppConstants.TYPE,
+            maxResults: AppConstants.MAX_RESULTS,
+            q: searchText
+        }
         url = url + '?' + this.constructUrLFromParams(queryParams);
         console.log(url);
         return fetch(url).then(function (response) {
