@@ -1,19 +1,15 @@
 var UIUtil = (function () {
     "use strict";
 
-    function UIUtil() {
-    };
+    function UIUtil() {};
 
     UIUtil.prototype.renderSearchDivision = function () {
         var searchDivision, searchBox, searchDiv, self = this;
-
         searchDiv = document.createElement('div');
         searchDiv.classList.add('search');
-
         searchBox = document.createElement('input');
         searchBox.setAttribute('type', 'text');
         searchBox.setAttribute('id', 'youtubesearch');
-
         searchBox.addEventListener("keyup", function (event) {
             event.preventDefault();
             if (event.keyCode == 13) {
@@ -74,8 +70,8 @@ var UIUtil = (function () {
 
 
     UIUtil.prototype.addEventListenerForPageClick = function () {
-        var paginationControlsElement = document.querySelector('#pagination').firstElementChild;
-        var self = this;
+        var paginationControlsElement = document.querySelector('#pagination').firstElementChild,
+            self = this;
         paginationControlsElement.addEventListener('click', function (event) {
             if (event.target.tagName === 'A') {
                 paginator.setCurrentPage(event.target.text);
@@ -85,7 +81,6 @@ var UIUtil = (function () {
         });
     }
 
-
     UIUtil.prototype.clearPagination = function () {
         var paginationElement = document.querySelector('#pagination');
         if (paginationElement) {
@@ -94,50 +89,44 @@ var UIUtil = (function () {
     }
 
     UIUtil.prototype.highliteCurrentPage = function () {
-        var paginationElement = document.querySelector('#pagination').firstElementChild;
-        var currentPage = paginator.getCurrentPage();
-        var aTag = paginationElement.querySelector('#page' + currentPage);
+        var paginationElement, currentPage, aTag, previousActivePage;
+        paginationElement = document.querySelector('#pagination').firstElementChild;
+        currentPage = paginator.getCurrentPage();
+        aTag = paginationElement.querySelector('#page' + currentPage);
 
         if (!aTag) {
             currentPage = 1;
             paginator.setCurrentPage(currentPage);
             aTag = paginationElement.querySelector('#page' + currentPage);
         }
-
-        var previousActivePage = paginationElement.querySelector('.active');
+        previousActivePage = paginationElement.querySelector('.active');
         if (previousActivePage) {
             previousActivePage.classList.remove('active');
         }
-
         aTag.classList.add('active');
     }
 
     UIUtil.prototype.renderVideos = function (videos) {
-        var allVideosElelement = document.createElement('div');
-        var allVideosFragment = document.createDocumentFragment();
-        var numberOfCards = paginator.getNumberOfVideosForCurrentPage();
-        var startIndex = paginator.getStartIndexForPage(numberOfCards);
-
+        var allVideosFragment, allVideosElelement, numberOfCards, startIndex, numberOfpages;
+        allVideosElelement = document.createElement('div');
+        allVideosFragment = document.createDocumentFragment();
+        numberOfCards = paginator.getNumberOfVideosForCurrentPage();
+        startIndex = paginator.getStartIndexForPage(numberOfCards);
         this.clearPreviosSearchResults();
-
         allVideosElelement.setAttribute('id', 'search-results');
         allVideosElelement.classList.add('search-results');
-
         for (var i = startIndex; i < (startIndex + numberOfCards); i++) {
             if (videos[i]) {
                 var node = this.constructHTMLNodeFor(videos[i], i);
                 allVideosFragment.appendChild(node);
             }
         }
-
         allVideosElelement.appendChild(allVideosFragment);
         document.body.appendChild(allVideosElelement);
-
-        var numberOfpages = paginator.getTotalNumberOfPagesFor(videos);
+        numberOfpages = paginator.getTotalNumberOfPagesFor(videos);
         this.renderPageNumbers(numberOfpages);
         this.addEventListenerForPageClick();
     }
-
 
     UIUtil.prototype.constructHTMLNodeFor = function (card, index) {
         var videoContainerTemplate = document.querySelector('#video-container-tpl');
