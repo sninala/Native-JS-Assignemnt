@@ -1,7 +1,11 @@
 var UIUtil = (function () {
     "use strict";
 
-    function UIUtil() {};
+    function UIUtil() {
+        //x,y cordinates to detect the swipe event
+        this.xDown = null;
+        this.yDown = null;
+    };
 
     UIUtil.prototype.renderSearchDivision = function () {
         var searchDivision, searchBox, searchDiv, self = this;
@@ -30,6 +34,45 @@ var UIUtil = (function () {
         self.renderPagenationFor(videos);
         window.addEventListener("resize", function () {
             self.renderPagenationFor(videos)
+        });
+        document.addEventListener('touchstart', function (event) {
+            this.xDown = event.touches[0].clientX;
+            this.yDown = event.touches[0].clientY;
+        });
+        document.addEventListener('touchmove', function (event) {
+            var xUp, yUp, xDiff, yDiff, currentPage, numberOfpages;
+            if (!this.xDown || !this.yDown) {
+                return;
+            }
+
+            xUp = event.touches[0].clientX;
+            yUp = event.touches[0].clientY;
+
+            xDiff = this.xDown - xUp;
+            yDiff = this.yDown - yUp;
+            currentPage = paginator.getCurrentPage();
+            currentPage = parseInt(currentPage)
+            numberOfpages = paginator.getTotalNumberOfPagesFor(videos);
+            if (Math.abs(xDiff) > Math.abs(yDiff)) { 
+                if (xDiff > 0) {
+                    if (currentPage < numberOfpages){
+                        currentPage = currentPage + 1;
+                    } else{
+                        currentPage = numberOfpages;
+                    }
+                    
+                } else {
+                    if (currentPage > 1){
+                        currentPage = currentPage - 1;
+                    } else {
+                        currentPage = 1
+                    }
+                }
+                var element = document.querySelector('#page' + currentPage);
+                element.click();
+            } 
+            this.xDown = null;
+            this.yDown = null;
         });
     }
 
